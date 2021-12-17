@@ -190,13 +190,16 @@ class Plot_OldSync(with_metaclass(MetaParams, object)):
 
             # Create the rest on a per data basis
             dt0, dt1 = self.pinf.xreal[0], self.pinf.xreal[-1]
+            # fix bug: make multi-timeframe align to first data line
+            data_line_number = 0
             for data in strategy.datas:
                 if not data.plotinfo.plot:
                     continue
 
                 self.pinf.xdata = self.pinf.x
                 xd = data.datetime.plotrange(self.pinf.xstart, self.pinf.xend)
-                if len(xd) < self.pinf.xlen:
+                # make other lines align to first data line
+                if len(xd) < self.pinf.xlen or data_line_number > 0:
                     self.pinf.xdata = xdata = []
                     xreal = self.pinf.xreal
                     dts = data.datetime.plot()
@@ -208,6 +211,8 @@ class Plot_OldSync(with_metaclass(MetaParams, object)):
 
                     self.pinf.xstart = bisect.bisect_left(dts, xtemp[0])
                     self.pinf.xend = bisect.bisect_right(dts, xtemp[-1])
+
+                data_line_number += 1
 
                 for ind in self.dplotsup[data]:
                     self.plotind(
