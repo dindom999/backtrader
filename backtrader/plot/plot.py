@@ -548,10 +548,12 @@ class Plot_OldSync(with_metaclass(MetaParams, object)):
             hlines = ind.plotinfo._get('plothlines', [])
             if not hlines:
                 hlines = ind.plotinfo._get('plotyhlines', [])
+
+            hlinescolor = ind.plotinfo._get('hlinescolor', self.pinf.sch.hlinescolor)
+            hlinesstyle = ind.plotinfo._get('hlinesstyle', self.pinf.sch.hlinesstyle)
+            hlineswidth = ind.plotinfo._get('hlineswidth', self.pinf.sch.hlineswidth)
             for hline in hlines:
-                ax.axhline(hline, color=self.pinf.sch.hlinescolor,
-                           ls=self.pinf.sch.hlinesstyle,
-                           lw=self.pinf.sch.hlineswidth)
+                ax.axhline(hline, color=hlinescolor, ls=hlinesstyle, lw=hlineswidth)
 
             if self.pinf.sch.legendind and \
                ind.plotinfo._get('plotlegend', True):
