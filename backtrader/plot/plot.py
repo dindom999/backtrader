@@ -35,6 +35,7 @@ import matplotlib.dates as mdates
 import matplotlib.font_manager as mfontmgr
 import matplotlib.legend as mlegend
 import matplotlib.ticker as mticker
+import matplotlib.patches as mpatches
 
 from ..utils.py3 import range, with_metaclass, string_types, integer_types
 from .. import AutoInfoClass, MetaParams, TimeFrame, date2num
@@ -520,6 +521,21 @@ class Plot_OldSync(with_metaclass(MetaParams, object)):
                                     alpha=falpha,
                                     interpolate=True,
                                     **kwargs)
+
+            # plot arrows
+            arrows = lineplotinfo._get('_arrows', [])
+            for arrow in arrows:
+                if arrow[0][0] >= self.pinf.xstart and arrow[1][0] <= self.pinf.xend:
+                    x = arrow[0][0]-self.pinf.xstart
+                    y = arrow[0][1]*1.5
+                    dx = arrow[1][0]-arrow[0][0]
+                    dy = arrow[1][1]-arrow[0][1]
+                    arr = mpatches.FancyArrow(x, y, dx, dy,
+                                              ec='black', fc='white', width=3,
+                                              head_length=dx/4,
+                                              length_includes_head=True,
+                                              )
+                    ax.add_patch(arr)
 
         # plot subindicators that were created on self
         for subind in subinds:
